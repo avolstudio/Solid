@@ -55,10 +55,6 @@ namespace Solid.Behaviours
         {
         
         }
-    
-        public void OnCompleted(Action continuation)
-        {
         
-        }
     }
 }
