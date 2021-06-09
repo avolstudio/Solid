@@ -1,7 +1,7 @@
-using Solid.Behaviours;
+
 
 /*Copyright (c) Created by Oleksii Volovich 2021*/
-namespace Solid.Extensions
+namespace Solid.Behaviours
 {
     public static class SolidOperationExtensions
     {

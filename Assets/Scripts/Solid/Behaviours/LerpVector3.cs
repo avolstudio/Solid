@@ -6,8 +6,6 @@ namespace Solid.Behaviours
 {
     public sealed class LerpVector3 : AwaitableBehaviour<Vector3>
     {
-        public event Action<Vector3> ValueChanged;
-
         [SerializeField] AnimationCurve _curve = AnimationCurve.Linear(0, 0, 1, 1);
 
         [SerializeField] private Vector3 StartValue;

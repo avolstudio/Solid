@@ -6,7 +6,6 @@ namespace Solid.Behaviours
     public abstract class AwaitableBehaviour<TResult> : SolidBehaviour
     {
         public event Action Finished;
-    
         public event Action Error;
         public  TResult Result { get; protected set; }
 

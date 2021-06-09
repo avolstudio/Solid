@@ -19,6 +19,8 @@ namespace Solid
         public TResult GetResult() => Operation.Result;
         public bool IsCompleted => Operation.IsCompleted;
 
+        private Action _finishHandler, _errorHandler;
+
         private Action _continuation;
     
         public SolidOperation(GameObject target = null,bool lockThread = true,bool destroyContainerContainerAfterExecution = true,string namePostfix = "",params object[] parameters)
@@ -37,7 +39,24 @@ namespace Solid
 
             Status = OperationStatus.CreatedNotRunning;
         }
-    
+        
+        public void AddOnFinishHandler(Action handler)
+        {
+            _finishHandler += handler;
+        } 
+        public void RemoveOnFinishHandler(Action handler)
+        {
+            _finishHandler -= handler;
+        } 
+        public void AddOnErrorHandler(Action handler)
+        {
+            _errorHandler += handler;
+        } 
+        public void RemoveOnErrorHandler(Action handler)
+        {
+            _errorHandler -= handler;
+        }
+
         public void Terminate(bool result,string message)
         {
             Operation.Terminate(result);
@@ -56,22 +75,22 @@ namespace Solid
         
             Status = OperationStatus.Running;
         }
-    
+
         private void OnOperationFinished()
         {
-            Operation.Finished -= OnOperationFinished;
-        
             Status = OperationStatus.Finished;
         
+            _finishHandler?.Invoke();
+
             DestroyAndContinue();
         }
 
         private void OnOperationError()
         {
-            Operation.Error -= OnOperationError;
-        
             Status = OperationStatus.Error;
         
+            _errorHandler?.Invoke();
+            
             DestroyAndContinue();
         }
 
