@@ -23,13 +23,13 @@ namespace Solid
 
         private Action _continuation;
     
-        public SolidOperation(GameObject target = null,bool lockThread = true,bool destroyContainerContainerAfterExecution = true,string namePostfix = "",params object[] parameters)
+        public SolidOperation(GameObject target = null,bool lockThread = true,bool destroyContainerAfterExecution = true,string namePostfix = "",params object[] parameters)
         {
             Container = target != null ? target :new GameObject();
 
             LockThread = lockThread;
         
-            DestroyContainerAfterExecution = destroyContainerContainerAfterExecution;
+            DestroyContainerAfterExecution = destroyContainerAfterExecution;
         
             Container.name = $"{typeof(TOperation)} + { namePostfix}";
         
