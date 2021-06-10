@@ -1,7 +1,7 @@
 # Solid
 Lightweight framework which provide awaitable and parameterized MonoBehaviour, and Model-View pair
 
-Look at the script named Test. create new scene, add Test to any comp and run. Test have next lines in Start method:
+Look at the script named Test. Create new scene, add Test to any GameObject and run. Test have next lines in Start method:
 
     
         Debug.Log("Begin execution");
