@@ -4,7 +4,7 @@ using UnityEngine;
 /*Copyright (c) Created by Oleksii Volovich 2021*/
 namespace Solid.Behaviours
 {
-    public sealed class LerpFloat : AwaitableBehaviour<float>
+    public sealed class LerpFloat : Awaitable<float>
     {
         [SerializeField] private float StartValue;
         [SerializeField] private float _currentValue;

@@ -4,7 +4,7 @@ using UnityEngine;
 /*Copyright (c) Created by Oleksii Volovich 2021*/
 namespace Solid.Behaviours
 {
-    public sealed class LerpVector3 : AwaitableBehaviour<Vector3>
+    public sealed class LerpVector3 : Awaitable<Vector3>
     {
         [SerializeField] AnimationCurve _curve = AnimationCurve.Linear(0, 0, 1, 1);
 
