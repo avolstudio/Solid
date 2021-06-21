@@ -7,6 +7,8 @@ public class Test : MonoBehaviour
     private async void Start()
     {
         Debug.Log("Begin execution");
+
+        await new SolidOperation(typeof(LerpFloat),parameters: new object[]{0f,10f,3f});
         
         await new SolidOperation<LerpFloat, float>(parameters: new object[]{0f,10f,3f});
         Debug.Log("continue after 3 seconds");

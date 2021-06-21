@@ -3,7 +3,6 @@ using System;
 /*Copyright (c) Created by Oleksii Volovich 2021*/
 namespace Solid.Behaviours
 {
-    
     public abstract class AwaitableBehaviour : SolidBehaviour
     {
         public event Action Finished;

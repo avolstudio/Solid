@@ -8,30 +8,34 @@ using Object = UnityEngine.Object;
 /*Copyright (c) Created by Oleksii Volovich 2021*/
 namespace Solid
 {
-    public sealed class SolidOperation<TOperation,TResult> : INotifyCompletion where TOperation:AwaitableBehaviour<TResult>
+    public class SolidOperation : INotifyCompletion 
     {
         public bool DestroyContainerAfterExecution { get; }
         public bool LockThread { get; }
-        public OperationStatus Status { get; private set; }
+        public OperationStatus Status { get; protected set; }
         public object[] Parameters { get; }
         public GameObject Container { get;  } 
-        public TOperation Operation { get; private set; }
-        public TResult GetResult() => Operation.Result;
+        public AwaitableBehaviour Operation { get; protected set; }
+        public void GetResult() {}
         public bool IsCompleted => Operation.IsCompleted;
 
         private Action _finishHandler, _errorHandler;
 
         private Action _continuation;
+
+        private Type _operationType;
     
-        public SolidOperation(GameObject target = null,bool lockThread = true,bool destroyContainerAfterExecution = true,string namePostfix = "",params object[] parameters)
+        public SolidOperation(Type operation,GameObject target = null,bool lockThread = true,bool destroyContainerAfterExecution = true,string namePostfix = "",params object[] parameters)
         {
+            _operationType = operation;
+            
             Container = target != null ? target :new GameObject();
 
             LockThread = lockThread;
         
             DestroyContainerAfterExecution = destroyContainerAfterExecution;
         
-            Container.name = $"{typeof(TOperation)} + { namePostfix}";
+            Container.name = $"{operation.Name} + { namePostfix}";
         
             Parameters = parameters;
         
@@ -62,7 +66,7 @@ namespace Solid
             Operation.Terminate(result);
         }
 
-        public void Run()
+        public virtual void Run()
         {
             if (Status == OperationStatus.Running)
             {
@@ -71,7 +75,7 @@ namespace Solid
                 return ;
             }
         
-            Operation = SolidBehaviour.Add<TOperation>(Container, Parameters);
+            Operation = (AwaitableBehaviour)SolidBehaviour.Add(_operationType,Container, Parameters);
         
             Status = OperationStatus.Running;
         }
@@ -116,6 +120,47 @@ namespace Solid
                 continuation?.Invoke();
             }
         }
+        
+        public  SolidOperation GetAwaiter () 
+        {
+            Run();
+
+            return this;
+        }
+    }
+    
+    public class SolidOperation<TOperation,TResult> : SolidOperation where TOperation:AwaitableBehaviour<TResult>
+    {
+        public TResult GetResult()
+        {
+            return ((TOperation) Operation).Result;
+        }
+
+        public SolidOperation(GameObject target = null,bool lockThread = true,bool destroyContainerAfterExecution = true,string namePostfix = "",params object[] parameters) : base(typeof(TOperation),target,lockThread,destroyContainerAfterExecution,namePostfix,parameters)
+        {
+        }
+        
+        public override void Run()
+        {
+            if (Status == OperationStatus.Running)
+            {
+                Debug.Log("Already running");
+            
+                return ;
+            }
+        
+            Operation = SolidBehaviour.Add<TOperation>(Container, Parameters);
+        
+            Status = OperationStatus.Running;
+        }
+        
+        public SolidOperation<TOperation,TResult> GetAwaiter ()
+        {
+            Run();
+
+            return this;
+        }
+        
     }
 
     public enum OperationStatus
