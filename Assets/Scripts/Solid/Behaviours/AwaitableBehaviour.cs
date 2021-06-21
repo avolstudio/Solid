@@ -3,11 +3,11 @@ using System;
 /*Copyright (c) Created by Oleksii Volovich 2021*/
 namespace Solid.Behaviours
 {
-    public abstract class AwaitableBehaviour<TResult> : SolidBehaviour
+    
+    public abstract class AwaitableBehaviour : SolidBehaviour
     {
         public event Action Finished;
         public event Action Error;
-        public  TResult Result { get; protected set; }
 
         private bool _isCompleted;
     
@@ -56,5 +56,9 @@ namespace Solid.Behaviours
         
         }
         
+    }
+    public abstract class AwaitableBehaviour<TResult> : AwaitableBehaviour
+    {
+        public TResult Result { get; protected set; }
     }
 }

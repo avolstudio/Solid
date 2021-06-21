@@ -26,7 +26,12 @@ namespace Solid.Behaviours
             
         }
         
-
+        public static SolidBehaviour Add(Type component,GameObject container, params object[] parameters)
+        {
+            _parameters = parameters;
+            
+            return (SolidBehaviour) container.AddComponent(component);
+        }
         public static TSolidComponent Add<TSolidComponent>(GameObject container, params object[] parameters)
             where TSolidComponent : SolidBehaviour
         {
