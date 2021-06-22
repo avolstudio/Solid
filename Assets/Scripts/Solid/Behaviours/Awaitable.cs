@@ -5,7 +5,7 @@ namespace Solid.Behaviours
 {
     public abstract class Awaitable : SolidBehaviour
     {
-        public event Action Finished;
+        public event Action Finish;
         public event Action Error;
 
         private bool _isCompleted;
@@ -24,7 +24,7 @@ namespace Solid.Behaviours
             
                 if (_finishedWithSuccess)
                 {
-                    Finished?.Invoke();
+                    Finish?.Invoke();
                 }
                 else
                 {
@@ -54,10 +54,10 @@ namespace Solid.Behaviours
         {
         
         }
-        
     }
+    
     public abstract class Awaitable<TResult> : Awaitable
     {
-        public TResult Result { get; protected set; }
+        public TResult Result { get; protected set; } 
     }
 }

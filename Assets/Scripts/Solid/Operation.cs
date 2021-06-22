@@ -13,41 +13,27 @@ namespace Solid
         public bool DestroyContainerAfterExecution { get; }
         public bool LockThread { get; }
         public OperationStatus Status { get; protected set; }
-        public object[] Parameters { get; }
-        public GameObject Container { get;  }
-        protected Awaitable _awaitableComponent { get; set; }
-        public void GetResult() {
-            if (!IsCompleted)
-            {
-                return;
-            }
-        }
+        
+        public void GetResult() { }
         public bool IsCompleted => _awaitableComponent.IsCompleted;
-
+        public GameObject Container { get;  }
+        protected object[] Parameters { get; }
+        protected Awaitable _awaitableComponent { get; set; }
+        
         private Action _finishHandler, _errorHandler;
 
         private Action _continuation;
 
         private readonly Type _awaitableType;
     
-        protected Operation(Type awaitableType,GameObject target = null,bool lockThread = true,bool destroyContainerAfterExecution = true,params object[] parameters)
-        {
-            _awaitableType = awaitableType;
-            
-            Container = target != null ? target :new GameObject();
 
-            LockThread = lockThread;
         
-            DestroyContainerAfterExecution = destroyContainerAfterExecution;
-
-            Parameters = parameters;
-
-            Status = OperationStatus.CreatedNotRunning;
-        }
-
-        private protected Operation()
+                
+        public Operation GetAwaiter () 
         {
-            
+            Run();
+
+            return this;
         }
         
         public void AddOnFinishHandler(Action handler)
@@ -72,7 +58,7 @@ namespace Solid
             _awaitableComponent.Terminate(result);
         }
 
-        public virtual void Run()
+        protected virtual void Run()
         {
             if (Status == OperationStatus.Running)
             {
@@ -84,6 +70,27 @@ namespace Solid
             _awaitableComponent = (Awaitable)SolidBehaviour.Add(_awaitableType,Container, Parameters);
         
             Status = OperationStatus.Running;
+        }
+        
+        protected Operation(Type awaitableType,GameObject target = null,bool lockThread = true,bool destroyContainerAfterExecution = true,params object[] parameters)
+        {
+            _awaitableType = awaitableType;
+            
+            Container = target != null ? target :new GameObject();
+
+            LockThread = lockThread;
+        
+            DestroyContainerAfterExecution = destroyContainerAfterExecution;
+
+            Parameters = parameters;
+
+            Status = OperationStatus.CreatedNotRunning;
+        }
+        
+        
+        private protected Operation()
+        {
+            
         }
 
         private void OnOperationFinished()
@@ -115,7 +122,7 @@ namespace Solid
         {
             _awaitableComponent.Error += OnOperationError;
 
-            _awaitableComponent.Finished += OnOperationFinished;
+            _awaitableComponent.Finish += OnOperationFinished;
 
             if (LockThread)
             {
@@ -127,13 +134,6 @@ namespace Solid
             }
         }
         
-        public Operation GetAwaiter () 
-        {
-            Run();
-
-            return this;
-        }
-
         public static Operation Create<TAwaitable>(GameObject target = null, bool lockThread = true,
             bool destroyContainerAfterExecution = true, params object[] parameters) where TAwaitable : Awaitable
         {
