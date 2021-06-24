@@ -4,7 +4,7 @@ using Solid.Model;
 /*Copyright (c) Created by Oleksii Volovich 2021*/
 namespace Solid.View
 {
-    public abstract class SolidObserver<TModel> : SolidBehaviour where TModel : IModel<TModel>
+    public abstract class SolidObserver<TModel> : PopUp where TModel : IModel<TModel>
     {
         private TModel _model;
 
