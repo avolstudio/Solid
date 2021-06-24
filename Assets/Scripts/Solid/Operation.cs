@@ -1,6 +1,10 @@
 using System;
+using System.Collections;
+using System.Linq;
 using System.Runtime.CompilerServices;
+using Solid.Attributes;
 using Solid.Behaviours;
+using Solid.View;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -10,23 +14,21 @@ namespace Solid
 {
     public class Operation : INotifyCompletion 
     {
-        public bool DestroyContainerAfterExecution { get; }
-        public bool LockThread { get; }
+        public bool DestroyContainerAfterExecution { get; protected set; }
+        public bool LockThread { get; protected set; }
         public OperationStatus Status { get; protected set; }
         
         public void GetResult() { }
-        public bool IsCompleted => _awaitableComponent.IsCompleted;
-        public GameObject Container { get;  }
-        protected object[] Parameters { get; }
-        protected Awaitable _awaitableComponent { get; set; }
+        public bool IsCompleted => Awaitable.IsCompleted;
+        public GameObject Container { get;protected set; }
+        protected object[] Parameters { get; set; }
+        public Awaitable Awaitable { get; protected set; }
         
         private Action _finishHandler, _errorHandler;
 
         private Action _continuation;
 
-        private readonly Type _awaitableType;
-    
-
+        protected Type _awaitableType;
         
                 
         public Operation GetAwaiter () 
@@ -53,9 +55,9 @@ namespace Solid
             _errorHandler -= handler;
         }
 
-        public void Terminate(bool result,string message)
+        public void Terminate(bool result)
         {
-            _awaitableComponent.Terminate(result);
+            Awaitable.Terminate(result);
         }
 
         protected virtual void Run()
@@ -67,7 +69,7 @@ namespace Solid
                 return ;
             }
         
-            _awaitableComponent = (Awaitable)SolidBehaviour.Add(_awaitableType,Container, Parameters);
+            Awaitable = (Awaitable)SolidBehaviour.Add(_awaitableType,Container, Parameters);
         
             Status = OperationStatus.Running;
         }
@@ -120,9 +122,9 @@ namespace Solid
     
         void INotifyCompletion.OnCompleted(Action continuation)
         {
-            _awaitableComponent.Error += OnOperationError;
+            Awaitable.Error += OnOperationError;
 
-            _awaitableComponent.Finish += OnOperationFinished;
+            Awaitable.Finish += OnOperationFinished;
 
             if (LockThread)
             {
@@ -144,6 +146,54 @@ namespace Solid
         {
             return new Operation<TResult>(typeof(TAwaitable),target,lockThread,destroyContainerAfterExecution,parameters);
         }
+
+        public static InstantiatedOperation<TPrefab> CreateFromPrefab<TPrefab>(GameObject target = null, bool lockThread = true,
+            bool destroyContainerAfterExecution = true, params object[] parameters)where TPrefab : Awaitable
+        {
+            return new InstantiatedOperation<TPrefab>(target,lockThread,destroyContainerAfterExecution,parameters);
+        }
+    }
+
+
+    public class InstantiatedOperation<TPrefab> : Operation where TPrefab: Awaitable
+    {
+        protected internal InstantiatedOperation(GameObject parent = null, bool lockThread = true, bool destroyContainerAfterExecution = true, params object[] parameters)
+        {
+            Container = parent;
+
+            LockThread = lockThread;
+        
+            DestroyContainerAfterExecution = destroyContainerAfterExecution;
+
+            Parameters = parameters;
+
+            Status = OperationStatus.CreatedNotRunning;
+        }
+
+        protected InstantiatedOperation()
+        {
+        }
+
+        protected override void Run()
+        {
+            if (Status == OperationStatus.Running)
+            {
+                Debug.Log("Already running");
+            
+                return ;
+            }
+            
+            var pathAtt = (PathAttribute)typeof(TPrefab).GetCustomAttributes(true).First(attribute => attribute is PathAttribute);
+
+            if (pathAtt == null)
+                throw new Exception("Path was attribute not specified");
+
+            var prefab = (TPrefab)Resources.Load(pathAtt.Path);
+
+            Awaitable = SolidBehaviour.Instantiate(prefab,Container,Parameters);
+
+            Status = OperationStatus.Running;
+        }
     }
     
     public class Operation<TResult> : Operation 
@@ -152,8 +202,10 @@ namespace Solid
         {
         }
 
-        public new TResult GetResult() => ((Awaitable<TResult>) _awaitableComponent).Result;
+        public new TResult GetResult() => ((Awaitable<TResult>) Awaitable).Result;
     }
+    
+    
 
     public enum OperationStatus
     {
