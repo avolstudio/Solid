@@ -183,12 +183,12 @@ namespace Solid
                 return ;
             }
             
-            var pathAtt = (PathAttribute)typeof(TPrefab).GetCustomAttributes(true).First(attribute => attribute is PathAttribute);
+            var pathAtt = (ResourcePath)typeof(TPrefab).GetCustomAttributes(true).First(attribute => attribute is ResourcePath);
 
             if (pathAtt == null)
                 throw new Exception("Path was attribute not specified");
 
-            var prefab = (TPrefab)Resources.Load(pathAtt.Path);
+            var prefab = Resources.Load<TPrefab>(pathAtt.Path);
 
             Awaitable = SolidBehaviour.Instantiate(prefab,Container,Parameters);
 

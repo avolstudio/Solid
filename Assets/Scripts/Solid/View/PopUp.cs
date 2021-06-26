@@ -6,9 +6,9 @@ using UnityEngine.UI;
 
 namespace Solid.View
 {
-    [Path("override path here")]
+    [ResourcePath("override path here")]
     public abstract class PopUp : Awaitable
-    {
+    { 
         [SerializeField] protected Canvas _canvas;
         
         public Button CloseButton;
@@ -22,7 +22,7 @@ namespace Solid.View
         
     }
     
-    [Path("override path here")]
+    [ResourcePath("override path here")]
     public abstract class PopUp<TResult> : Awaitable<TResult>
     {
     }
