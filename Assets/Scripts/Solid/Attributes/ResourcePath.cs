@@ -2,11 +2,11 @@
 
 namespace Solid.Attributes
 {
-    public class PathAttribute : Attribute
+    public class ResourcePath : Attribute
     {
         public readonly string Path;
 
-        public PathAttribute(string path)
+        public ResourcePath(string path)
         {
             Path = path;
         }
