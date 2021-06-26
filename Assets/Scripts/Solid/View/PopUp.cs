@@ -19,11 +19,5 @@ namespace Solid.View
         }
 
         protected abstract void OnShow();
-        
-    }
-    
-    [ResourcePath("override path here")]
-    public abstract class PopUp<TResult> : Awaitable<TResult>
-    {
     }
 }

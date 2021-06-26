@@ -37,6 +37,5 @@ namespace Solid.View
             return operation;
         }
         
-        
     }
 }
