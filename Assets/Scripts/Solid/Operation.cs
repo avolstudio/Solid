@@ -17,7 +17,6 @@ namespace Solid
         public bool DestroyContainerAfterExecution { get; protected set; }
         public bool LockThread { get; protected set; }
         public OperationStatus Status { get; protected set; }
-        
         public void GetResult() { }
         public bool IsCompleted => Awaitable.IsCompleted;
         public GameObject Container { get;protected set; }
@@ -60,15 +59,18 @@ namespace Solid
             Awaitable.Terminate(result);
         }
 
+
+        protected bool IsRunning()
+        {
+            return Status == OperationStatus.Running;
+        }
+        
+
         protected virtual void Run()
         {
-            if (Status == OperationStatus.Running)
-            {
-                Debug.Log("Already running");
-            
-                return ;
-            }
-        
+            if (IsRunning())
+                return;
+
             Awaitable = (Awaitable)SolidBehaviour.Add(_awaitableType,Container, Parameters);
         
             Status = OperationStatus.Running;
@@ -88,8 +90,7 @@ namespace Solid
 
             Status = OperationStatus.CreatedNotRunning;
         }
-        
-        
+
         private protected Operation()
         {
             
@@ -176,23 +177,26 @@ namespace Solid
 
         protected override void Run()
         {
-            if (Status == OperationStatus.Running)
-            {
-                Debug.Log("Already running");
-            
-                return ;
-            }
-            
+            if (IsRunning())
+                return;
+
+            var path = GetPath();
+
+            var prefab = Resources.Load<TPrefab>(path);
+
+            Awaitable = SolidBehaviour.Instantiate(prefab,Container,Parameters);
+
+            Status = OperationStatus.Running;
+        }
+
+        private string GetPath()
+        {
             var pathAtt = (ResourcePath)typeof(TPrefab).GetCustomAttributes(true).First(attribute => attribute is ResourcePath);
 
             if (pathAtt == null)
                 throw new Exception("Path was attribute not specified");
 
-            var prefab = Resources.Load<TPrefab>(pathAtt.Path);
-
-            Awaitable = SolidBehaviour.Instantiate(prefab,Container,Parameters);
-
-            Status = OperationStatus.Running;
+            return pathAtt.Path;
         }
     }
     
