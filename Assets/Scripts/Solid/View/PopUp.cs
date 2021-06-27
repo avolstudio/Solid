@@ -15,7 +15,16 @@ namespace Solid.View
 
         private void OnEnable()
         {
-            OnShow();
+            try
+            {
+                OnShow();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+            
         }
 
         protected abstract void OnShow();
