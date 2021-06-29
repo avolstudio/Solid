@@ -11,7 +11,9 @@ namespace Solid.View
     { 
         [SerializeField] protected Canvas _canvas;
         
-        public Button CloseButton;
+        [SerializeField] private  Button _closeButton;
+
+        public Button CloseButton => _closeButton;
 
         private void OnEnable()
         {
@@ -21,7 +23,7 @@ namespace Solid.View
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                Debug.LogError("popUp showing failed with exception: " + e);
                 throw;
             }
             
