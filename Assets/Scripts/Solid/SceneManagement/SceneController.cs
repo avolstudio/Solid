@@ -7,30 +7,30 @@ namespace Solid.SceneManagement
     [SceneName("your scene name in build settings")]
     public abstract class SceneController: MonoBehaviour
     {
-        protected object[] _parameters;
+        protected object[] Parameters;
 
         protected UIManager UIManager;
         
-        protected Canvas sceneCanvas;
+        [SerializeField] protected Canvas SceneCanvas;
         
         private void Awake()
         {
-            SceneManager.TryPullParameters(GetType(),out _parameters);
+            SceneManager.TryPullParameters(GetType(),out Parameters);
 
             CreateUIManager();
             
-            OnSceneAwake(_parameters);
+            OnSceneAwake(Parameters);
         }
 
         private void CreateUIManager()
         {
-            if (sceneCanvas == null)
+            if (SceneCanvas == null)
             {
                 Debug.Log("sceneCanvas is not set.UIManager will not be created");
                 return;
             }
             
-            UIManager = new UIManager(sceneCanvas);
+            UIManager = new UIManager(SceneCanvas);
         }
 
         protected virtual void OnSceneAwake(params object [] parameters)
