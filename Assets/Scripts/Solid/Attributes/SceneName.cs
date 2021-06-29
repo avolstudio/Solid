@@ -1,11 +1,14 @@
 ﻿using System;
 
-public class SceneName : Attribute
+namespace Solid.Attributes
 {
-    public readonly string Name;
-    
-    public SceneName(string name)
+    public class SceneName : Attribute
     {
-        Name = name;
+        public readonly string Name;
+    
+        public SceneName(string name)
+        {
+            Name = name;
+        }
     }
 }
