@@ -1,12 +1,11 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 /*Copyright (c) Created by Oleksii Volovich 2021*/
 namespace Solid.Behaviours
 {
     public sealed class LerpVector3 : Awaitable<Vector3>
     {
-        [SerializeField] AnimationCurve _curve = AnimationCurve.Linear(0, 0, 1, 1);
+        [SerializeField] private AnimationCurve _curve = AnimationCurve.Linear(0, 0, 1, 1);
 
         [SerializeField] private Vector3 StartValue;
         [SerializeField] private Vector3 TargetValue;
@@ -15,6 +14,12 @@ namespace Solid.Behaviours
         [SerializeField] private float _valueForTick;
         [SerializeField] private float _currentTime;
         [SerializeField] private float _remainingTimeInSeconds;
+
+
+        private void Update()
+        {
+            Lerp();
+        }
 
         protected override void OnAwake(params object[] parameters)
         {
@@ -29,17 +34,11 @@ namespace Solid.Behaviours
         }
 
 
-        private void Update()
-        {
-            Lerp();
-        }
-
-
         private void Lerp()
         {
             if (Vector3.Distance(Result, TargetValue) < 0.001f)
             {
-                SetComplete(true);
+                SetComplete();
                 return;
             }
 

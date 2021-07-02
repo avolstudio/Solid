@@ -8,10 +8,10 @@ namespace Solid.View
 {
     [ResourcePath("override path here")]
     public abstract class PopUp : Awaitable
-    { 
+    {
         [SerializeField] protected Canvas _canvas;
-        
-        [SerializeField] private  Button _closeButton;
+
+        [SerializeField] private Button _closeButton;
 
         public Button CloseButton => _closeButton;
 
@@ -26,7 +26,6 @@ namespace Solid.View
                 Debug.LogError("popUp showing failed with exception: " + e);
                 throw;
             }
-            
         }
 
         protected abstract void OnShow();

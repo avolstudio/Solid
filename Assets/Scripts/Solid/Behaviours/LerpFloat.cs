@@ -15,6 +15,11 @@ namespace Solid.Behaviours
         [SerializeField] private float _currentTime;
         [SerializeField] private float _remainingTimeInSeconds;
 
+        private void Update()
+        {
+            Lerp();
+        }
+
         protected override void OnAwake(params object[] parameters)
         {
             StartValue = (float) parameters[0];
@@ -26,18 +31,13 @@ namespace Solid.Behaviours
             _currentTime = 0;
             _remainingTimeInSeconds = LerpTimeInSeconds;
         }
-        
-        private void Update()
-        {
-            Lerp();
-        }
 
-        
+
         private void Lerp()
         {
             if (Math.Abs(TargetValue - Result) < 0.0001)
             {
-                SetComplete(true);
+                SetComplete();
                 return;
             }
 
@@ -51,7 +51,7 @@ namespace Solid.Behaviours
             _remainingTimeInSeconds -= Time.deltaTime;
         }
 
-        public static LerpFloat Lerp(GameObject container, float startValue , float targetValue, float time)
+        public static LerpFloat Lerp(GameObject container, float startValue, float targetValue, float time)
         {
             return Add<LerpFloat>(container, startValue, targetValue, time);
         }

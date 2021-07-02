@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Solid.Behaviours
 {
-    public abstract class SolidBehaviour: MonoBehaviour
+    public abstract class SolidBehaviour : MonoBehaviour
     {
         private static object[] _parameters;
 
@@ -23,39 +23,45 @@ namespace Solid.Behaviours
 
         protected virtual void OnAwake(params object[] parameters)
         {
-            
         }
-        
-        public static SolidBehaviour Add(Type component,GameObject container, params object[] parameters)
+
+        public static SolidBehaviour Add(Type component, GameObject container, params object[] parameters)
         {
             _parameters = parameters;
-            
+
             return (SolidBehaviour) container.AddComponent(component);
         }
+
         public static TSolidComponent Add<TSolidComponent>(GameObject container, params object[] parameters)
             where TSolidComponent : SolidBehaviour
         {
             _parameters = parameters;
-            
+
             return (TSolidComponent) container.AddComponent(typeof(TSolidComponent));
         }
-        public static TSolidComponent Instantiate<TSolidComponent>(TSolidComponent obj,params object[] parameters) where TSolidComponent : SolidBehaviour
+
+        public static TSolidComponent Instantiate<TSolidComponent>(TSolidComponent obj, params object[] parameters)
+            where TSolidComponent : SolidBehaviour
         {
             _parameters = parameters;
-            
+
             return GameObject.Instantiate(obj);
         }
-        public static TSolidComponent Instantiate<TSolidComponent>(TSolidComponent obj,Transform parent,params object[] parameters) where TSolidComponent : SolidBehaviour
+
+        public static TSolidComponent Instantiate<TSolidComponent>(TSolidComponent obj, Transform parent,
+            params object[] parameters) where TSolidComponent : SolidBehaviour
         {
             _parameters = parameters;
-            
-            return GameObject.Instantiate(obj,parent);
+
+            return GameObject.Instantiate(obj, parent);
         }
-        public static TSolidComponent Instantiate<TSolidComponent>(TSolidComponent obj,Vector3 position,Quaternion rotation,params object[] parameters) where TSolidComponent : SolidBehaviour
+
+        public static TSolidComponent Instantiate<TSolidComponent>(TSolidComponent obj, Vector3 position,
+            Quaternion rotation, params object[] parameters) where TSolidComponent : SolidBehaviour
         {
             _parameters = parameters;
-            
-            return GameObject.Instantiate(obj,position,rotation);
+
+            return GameObject.Instantiate(obj, position, rotation);
         }
     }
 }

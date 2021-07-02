@@ -5,21 +5,20 @@ using UnityEngine;
 namespace Solid.SceneManagement
 {
     [SceneName("your scene name in build settings")]
-    public abstract class SceneController: MonoBehaviour
+    public abstract class SceneController : MonoBehaviour
     {
-        protected object[] Parameters;
+        [SerializeField] protected Canvas SceneCanvas;
+        protected object[] _parameters;
 
         protected UIManager UIManager;
-        
-        [SerializeField] protected Canvas SceneCanvas;
-        
+
         private void Awake()
         {
-            SceneManager.TryPullParameters(GetType(),out Parameters);
+            SceneManager.TryPullParameters(GetType(), out _parameters);
 
             CreateUIManager();
-            
-            OnSceneAwake(Parameters);
+
+            OnSceneAwake(_parameters);
         }
 
         private void CreateUIManager()
@@ -29,13 +28,12 @@ namespace Solid.SceneManagement
                 Debug.Log("sceneCanvas is not set.UIManager will not be created");
                 return;
             }
-            
+
             UIManager = new UIManager(SceneCanvas);
         }
 
-        protected virtual void OnSceneAwake(params object [] parameters)
+        protected virtual void OnSceneAwake(params object[] parameters)
         {
-        
         }
     }
 }
