@@ -30,7 +30,7 @@ namespace Solid.Behaviours
                 Destroy(this);
             }
         }
-
+        
         public event Action Finish;
         public event Action Error;
 

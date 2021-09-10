@@ -23,7 +23,7 @@ namespace Solid
         {
             _awaitableType = awaitableType;
 
-            Container = target != null ? target : new GameObject();
+            Container = target != null ? target : new GameObject(awaitableType.Name);
 
             LockThread = lockThread;
 
@@ -46,7 +46,7 @@ namespace Solid
         protected object[] Parameters { get; set; }
         public Awaitable Awaitable { get; protected set; }
 
-        void INotifyCompletion.OnCompleted(Action continuation)
+        public void OnCompleted(Action continuation)
         {
             Awaitable.Error += OnOperationError;
 
@@ -70,9 +70,11 @@ namespace Solid
             return this;
         }
 
-        public void AddOnFinishHandler(Action handler)
+        public Operation AddOnFinishHandler(Action handler)
         {
             _finishHandler += handler;
+            
+            return this;
         }
 
         public void RemoveOnFinishHandler(Action handler)
@@ -80,9 +82,11 @@ namespace Solid
             _finishHandler -= handler;
         }
 
-        public void AddOnErrorHandler(Action handler)
+        public Operation AddOnErrorHandler(Action handler)
         {
             _errorHandler += handler;
+
+            return this;
         }
 
         public void RemoveOnErrorHandler(Action handler)
@@ -141,6 +145,12 @@ namespace Solid
             bool destroyContainerAfterExecution = true, params object[] parameters) where TAwaitable : Awaitable
         {
             return new Operation(typeof(TAwaitable), target, lockThread, destroyContainerAfterExecution, parameters);
+        } 
+        public static Operation Timer(float time,GameObject target = null, bool lockThread = true,
+            bool destroyContainerAfterExecution = true)
+        {
+            return Create<LerpFloat>(target, lockThread, destroyContainerAfterExecution,
+                new object[] {0f, 1f, time});
         }
 
         public static Operation<TResult> Create<TAwaitable, TResult>(GameObject target = null, bool lockThread = true,
@@ -189,16 +199,22 @@ namespace Solid
 
             var prefab = Resources.Load<TPrefab>(path);
 
-            Awaitable = SolidBehaviour.Instantiate(prefab, Container, Parameters);
+            Awaitable = SolidBehaviour.Instantiate(prefab, Parameters);
 
             Status = OperationStatus.Running;
         }
 
         private string GetPath()
         {
-            var pathAtt = (ResourcePath) typeof(TPrefab).GetCustomAttributes(true)
-                .First(attribute => attribute is ResourcePath);
+            var allAtts =  typeof(TPrefab).GetCustomAttributes(false);
 
+            if (allAtts == null || allAtts.Length == 0)
+            {
+                throw new Exception("No custom attributes applied to this type. Add ResourcePath att and try again");
+            }
+
+            var pathAtt = (ResourcePath) allAtts.First(att => att is ResourcePath);
+            
             if (pathAtt == null)
                 throw new Exception("Path was attribute not specified");
 

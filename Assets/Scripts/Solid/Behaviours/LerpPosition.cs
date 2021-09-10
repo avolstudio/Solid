@@ -1,23 +1,21 @@
-﻿using System;
+using System;
 using UnityEngine;
 
-/*Copyright (c) Created by Oleksii Volovich 2021*/
 namespace Solid.Behaviours
 {
-    public sealed class LerpFloat : Awaitable<float>
+    public class LerpPosition : Awaitable<Vector3>
     {
-
         public event Action Changed;
         
-        [SerializeField] private float StartValue;
-        [SerializeField] private float _currentValue;
-        [SerializeField] private float TargetValue;
+        [SerializeField] private Vector3 StartValue;
+        [SerializeField] private Vector3 _currentValue;
+        [SerializeField] private Vector3 TargetValue;
         [SerializeField] private float LerpTimeInSeconds;
 
         [SerializeField] private float _valueForTick;
         [SerializeField] private float _currentTime;
         [SerializeField] private float _remainingTimeInSeconds;
-
+        
         private void Update()
         {
             Lerp();
@@ -25,8 +23,8 @@ namespace Solid.Behaviours
 
         protected override void OnAwake(params object[] parameters)
         {
-            StartValue = (float) parameters[0];
-            TargetValue = (float) parameters[1];
+            StartValue = (Vector3) parameters[0];
+            TargetValue = (Vector3) parameters[1];
             LerpTimeInSeconds = (float) parameters[2];
 
             Result = StartValue;
@@ -34,11 +32,10 @@ namespace Solid.Behaviours
             _currentTime = 0;
             _remainingTimeInSeconds = LerpTimeInSeconds;
         }
-
-
+        
         private void Lerp()
         {
-            if (Math.Abs(TargetValue - Result) < 0.0001)
+            if (Vector3.Distance(TargetValue,Result) < 0.0001)
             {
                 SetComplete();
                 return;
@@ -49,21 +46,13 @@ namespace Solid.Behaviours
 
             _currentTime += _valueForTick;
 
-            Result = Mathf.Lerp(StartValue, TargetValue, _currentTime);
+            Result = Vector3.Lerp(StartValue, TargetValue, _currentTime);
+
+            transform.position = Result;
             
             Changed?.Invoke();
 
             _remainingTimeInSeconds -= Time.deltaTime;
-        }
-
-        public static LerpFloat Lerp(GameObject container, float startValue, float targetValue, float time)
-        {
-            return Add<LerpFloat>(container, startValue, targetValue, time);
-        }
-
-        public static LerpFloat AsTimer(GameObject container, float time)
-        {
-            return Add<LerpFloat>(container, 0f, time, time);
         }
     }
 }

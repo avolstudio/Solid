@@ -6,6 +6,9 @@ namespace Solid.Model
     public interface IModel<out TModel>
     {
         bool IsDirty { get; }
+        
         event Action<TModel> ModelChanged;
+
+        void ResetDirty();
     }
 }
