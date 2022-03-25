@@ -2,7 +2,6 @@
 
 namespace Solid.Attributes
 {
-
     public class ResourcePath : Attribute
     {
         public readonly string Path;

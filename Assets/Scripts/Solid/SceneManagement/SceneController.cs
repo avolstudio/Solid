@@ -37,9 +37,4 @@ namespace Solid.SceneManagement
         {
         }
     }
-    
-    public abstract class SceneController<TView> : SceneController where TView:SceneView
-    {
-        public abstract TView View { get; }
-    }
 }

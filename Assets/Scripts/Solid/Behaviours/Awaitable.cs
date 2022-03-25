@@ -45,8 +45,7 @@ namespace Solid.Behaviours
 
             IsCompleted = true;
         }
-
-
+        
         protected virtual void OnFinish(bool finishedWithSuccess)
         {
         }

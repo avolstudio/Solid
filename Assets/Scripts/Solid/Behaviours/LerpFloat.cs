@@ -6,7 +6,6 @@ namespace Solid.Behaviours
 {
     public sealed class LerpFloat : Awaitable<float>
     {
-
         public event Action Changed;
         
         [SerializeField] private float StartValue;
@@ -43,8 +42,7 @@ namespace Solid.Behaviours
                 SetComplete();
                 return;
             }
-
-
+            
             _valueForTick = Time.deltaTime / LerpTimeInSeconds;
 
             _currentTime += _valueForTick;
