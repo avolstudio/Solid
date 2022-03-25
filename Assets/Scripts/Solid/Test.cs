@@ -6,16 +6,10 @@ public class Test : MonoBehaviour
 {
     private async void Start()
     {
-        Debug.Log("Begin execution");
-
+        
+        Debug.Log("start thread blocking operation. Duration  - 3 second");
         await Operation.Create<LerpFloat>(parameters: new object[] {0f, 10f, 3f});
-        Debug.Log("Begin execution");
-
-        await Operation.Create<LerpFloat>(parameters: new object[] {0f, 10f, 3f});
-        Debug.Log("continue after 3 seconds");
-
-        await Operation.Create<LerpFloat>(parameters: new object[] {0f, 10f, 3f});
-        Debug.Log("continue after 3 seconds");
+        Debug.Log("finishs thread blocking operation.");
 
         var operation = Operation.Create<LerpFloat, float>(lockThread: false, parameters: new object[] {0f, 10f, 3f});
 
