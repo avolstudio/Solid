@@ -1,44 +1,22 @@
 using System.Net.Http;
 using System.Threading.Tasks;
+using Solid.Behaviours;
 
-namespace Solid.Behaviours
+public class HTTPGetRequest: HTTPRequest
 {
-    public abstract class HTTPRequest: Awaitable<HttpResponseMessage>
+    private async void Start()
     {
-        public static HttpClient Client = new HttpClient();
-        
-        protected  string ServerAdress = "http://localhost:80";
-        
-        protected override void OnAwake(params object[] parameters)
-        {
-            if (parameters!= null || parameters.Length == 0)
-            {
-                return;
-            }
+        var response = await SendMessage();
+
+        Result = response;
             
-            ServerAdress = (string) parameters[0];
-        }
+        SetComplete(response.IsSuccessStatusCode);
     }
-    
-    
-    public class HTTPGetRequest: HTTPRequest
+
+    private async Task<HttpResponseMessage> SendMessage()
     {
-
-        private async void Start()
-        {
-            var response = await SendMessage();
-
-            Result = response;
+        var response = await Client.GetAsync(ServerAdress);
             
-            SetComplete(response.IsSuccessStatusCode);
-        }
-
-        private async Task<HttpResponseMessage> SendMessage()
-        {
-            var response = await Client.GetAsync(ServerAdress);
-            
-            return response;
-        }
+        return response;
     }
-}    
-
+}

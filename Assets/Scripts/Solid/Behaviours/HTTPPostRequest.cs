@@ -5,7 +5,7 @@ namespace Solid.Behaviours
 {
     public class HTTPPostRequest:HTTPRequest
     {
-        private string postData = "My first message+++";
+        protected string postData = "My first message+++";
 
         protected override void OnAwake(params object[] parameters)
         {

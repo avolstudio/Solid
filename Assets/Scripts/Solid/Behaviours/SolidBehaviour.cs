@@ -8,6 +8,8 @@ namespace Solid.Behaviours
     public abstract class SolidBehaviour : MonoBehaviour
     {
         private static object[] _parameters;
+        
+        public int ID { get; }
 
         private void Awake()
         {

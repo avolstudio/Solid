@@ -5,6 +5,9 @@ namespace Solid.Behaviours
 {
     public abstract class Awaitable : SolidBehaviour
     {
+        public event Action Complete;
+        public event Action Error;
+        
         private bool _finishedWithSuccess;
 
         private bool _isCompleted;
@@ -21,7 +24,7 @@ namespace Solid.Behaviours
                     return;
 
                 if (_finishedWithSuccess)
-                    Finish?.Invoke();
+                    Complete?.Invoke();
                 else
                     Error?.Invoke();
 
@@ -30,9 +33,11 @@ namespace Solid.Behaviours
                 Destroy(this);
             }
         }
-        
-        public event Action Finish;
-        public event Action Error;
+
+        private void OnDestroy()
+        {
+            Terminate(false);
+        }
 
         public void Terminate(bool result)
         {
