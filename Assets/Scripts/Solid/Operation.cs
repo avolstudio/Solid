@@ -50,7 +50,7 @@ namespace Solid
         {
             Awaitable.Error += OnOperationError;
 
-            Awaitable.Finish += OnOperationFinished;
+            Awaitable.Complete += OnOperationComplete;
 
             if (LockThread)
                 _continuation = continuation;
@@ -116,7 +116,7 @@ namespace Solid
             Status = OperationStatus.Running;
         }
 
-        private void OnOperationFinished()
+        private void OnOperationComplete()
         {
             Status = OperationStatus.Finished;
 
