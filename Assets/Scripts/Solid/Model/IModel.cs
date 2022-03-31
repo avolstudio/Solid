@@ -8,7 +8,5 @@ namespace Solid.Model
         bool IsDirty { get; }
         
         event Action<TModel> ModelChanged;
-
-        void ResetDirty();
     }
 }
