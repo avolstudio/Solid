@@ -1,0 +1,30 @@
+using System.Threading.Tasks;
+using Solid.Attributes;
+using Solid.Core;
+using Solid.UI;
+using UnityEngine;
+using UnityEngine.UI;
+
+namespace Solid.Examples.PopUps
+{
+    [ResourcePath("PopUps/LogoPopUp")]
+    public class LogoPopUp : PopUp
+    {
+        [SerializeField] private float showTime = 5f;
+        protected override void OnAwake(params object[] parameters)
+        {
+            base.OnAwake(parameters);
+            
+            if (parameters.Length == 0) return;
+            
+            showTime = (float) parameters[0];
+        }
+
+        protected override async void OnStart()
+        {
+            await Operation.Timer(showTime,target:gameObject,destroyContainerAfterExecution:false);
+            
+            SetCompleteAndDestroy();
+        }
+    }
+}

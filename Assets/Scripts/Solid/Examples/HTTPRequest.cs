@@ -1,9 +1,10 @@
+using System;
 using System.Net.Http;
-using System.Threading.Tasks;
+using Solid.Core;
 
-namespace Solid.Behaviours
+namespace Solid.Examples
 {
-    public abstract class HTTPRequest: Awaitable<HttpResponseMessage>
+    public abstract class HttpRequest: Awaitable<HttpResponseMessage>
     {
         public static HttpClient Client = new HttpClient();
         
@@ -17,6 +18,11 @@ namespace Solid.Behaviours
             }
             
             ServerAdress = (string) parameters[0];
+        }
+
+        protected virtual void Update()
+        {
+            Client.Timeout = TimeSpan.FromSeconds(5);
         }
     }
 }    

@@ -1,21 +1,23 @@
-using System;
+﻿using System;
+using Solid.Core;
 using UnityEngine;
 
-namespace Solid.Behaviours
+/*Copyright (c) Created by Oleksii Volovich 2021*/
+namespace Solid.Examples
 {
-    public class LerpPosition : Awaitable<Vector3>
+    public sealed class LerpFloat : Awaitable<float>
     {
         public event Action Changed;
         
-        [SerializeField] private Vector3 StartValue;
-        [SerializeField] private Vector3 _currentValue;
-        [SerializeField] private Vector3 TargetValue;
+        [SerializeField] private float StartValue;
+        [SerializeField] private float _currentValue;
+        [SerializeField] private float TargetValue;
         [SerializeField] private float LerpTimeInSeconds;
 
         [SerializeField] private float _valueForTick;
         [SerializeField] private float _currentTime;
         [SerializeField] private float _remainingTimeInSeconds;
-        
+
         private void Update()
         {
             Lerp();
@@ -23,8 +25,8 @@ namespace Solid.Behaviours
 
         protected override void OnAwake(params object[] parameters)
         {
-            StartValue = (Vector3) parameters[0];
-            TargetValue = (Vector3) parameters[1];
+            StartValue = (float) parameters[0];
+            TargetValue = (float) parameters[1];
             LerpTimeInSeconds = (float) parameters[2];
 
             Result = StartValue;
@@ -32,27 +34,30 @@ namespace Solid.Behaviours
             _currentTime = 0;
             _remainingTimeInSeconds = LerpTimeInSeconds;
         }
-        
+
+
         private void Lerp()
         {
-            if (Vector3.Distance(TargetValue,Result) < 0.0001)
+            if (Math.Abs(TargetValue - Result) < 0.0001)
             {
                 SetComplete();
                 return;
             }
-
-
+            
             _valueForTick = Time.deltaTime / LerpTimeInSeconds;
 
             _currentTime += _valueForTick;
 
-            Result = Vector3.Lerp(StartValue, TargetValue, _currentTime);
-
-            transform.position = Result;
+            Result = Mathf.Lerp(StartValue, TargetValue, _currentTime);
             
             Changed?.Invoke();
 
             _remainingTimeInSeconds -= Time.deltaTime;
+        }
+
+        protected override void OnStart()
+        {
+            
         }
     }
 }

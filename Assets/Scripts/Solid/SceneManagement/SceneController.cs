@@ -1,8 +1,9 @@
 ﻿using Solid.Attributes;
-using Solid.Behaviours;
+using Solid.Core;
 using Solid.UI;
 using UnityEngine;
 
+/*Copyright (c) Created by Oleksii Volovich 2021*/
 namespace Solid.SceneManagement
 {
     [SceneName("your scene name in build settings")]

@@ -1,6 +1,7 @@
-using Solid.Behaviours;
+using Solid.Core;
 using UnityEngine;
 
+/*Copyright (c) Created by Oleksii Volovich 2021*/
 namespace Solid.UI
 {
     [RequireComponent(typeof(Canvas))]

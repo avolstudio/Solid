@@ -5,6 +5,7 @@ using Solid.Attributes;
 using UnityEngine.SceneManagement;
 using Object = UnityEngine.Object;
 
+/*Copyright (c) Created by Oleksii Volovich 2021*/
 namespace Solid.SceneManagement
 {
     public static class SceneManager

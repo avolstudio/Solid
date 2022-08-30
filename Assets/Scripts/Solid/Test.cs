@@ -1,5 +1,6 @@
 ﻿using Solid;
-using Solid.Behaviours;
+using Solid.Core;
+using Solid.Examples;
 using UnityEngine;
 
 public class Test : MonoBehaviour
@@ -8,12 +9,12 @@ public class Test : MonoBehaviour
     {
         
         Debug.Log("start thread blocking operation. Duration  - 3 second");
-        await Operation.Create<LerpFloat>(parameters: new object[] {0f, 10f, 3f});
+        await Operation.Run<LerpFloat,float>(parameters: new object[] {0f, 10f, 3f});
         Debug.Log("finishs thread blocking operation.");
 
-        var operation = Operation.Create<LerpFloat, float>(lockThread: false, parameters: new object[] {0f, 10f, 3f});
+        var operation = Operation.Run<LerpFloat, float>(waitForFinish: false, parameters: new object[] {0f, 10f, 3f});
 
-        operation.AddOnFinishHandler(() => Debug.Log("finish non blocking operation"));
+        operation.AddOnFinishHandler((x) => Debug.Log("finish non blocking operation"));
 
         await operation;
 

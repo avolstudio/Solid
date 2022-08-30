@@ -1,9 +1,9 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace Solid.Behaviours
+namespace Solid.Examples
 {
-    public class HTTPPostRequest:HTTPRequest
+    public class HttpPostRequest:HttpRequest
     {
         protected string postData = "My first message+++";
 
@@ -14,7 +14,7 @@ namespace Solid.Behaviours
             postData = (string) parameters[1];
         }
 
-        private async void Start()
+        protected override async void OnStart()
         {
             var response = await SendMessage();
 

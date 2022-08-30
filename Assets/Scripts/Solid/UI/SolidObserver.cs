@@ -22,7 +22,7 @@ namespace Solid.UI
             }
         }
 
-        private new void OnDestroy()
+        private void OnDestroy()
         {
             Unsubscribe();
         }

@@ -1,36 +1,29 @@
 ﻿using System.Collections.Generic;
+using Solid.Core;
 using UnityEngine;
 
+/*Copyright (c) Created by Oleksii Volovich 2021*/
 namespace Solid.UI
 {
     public sealed class UIManager
     {
         private readonly Canvas _canvas;
-        private readonly Stack<Operation> _openedPopUps = new Stack<Operation>();
+
+        private Stack<PopUp> _popUps;
 
         public UIManager(Canvas canvas)
         {
             _canvas = canvas;
+            _popUps = new Stack<PopUp>();
         }
 
-        public void CloseAll()
-        {
-            for (var i = 0; i < _openedPopUps.Count; i++) _openedPopUps.Pop().Terminate(true);
-        }
-
-        public void CloseTop()
-        {
-            _openedPopUps.Pop().Terminate(true);
-        }
-
-
-        public InstantiatedOperation<TPopUp> ShowPopUp<TPopUp>(bool waitForClose = false, params object[] parameters)
+        public InstantiateOperation<PopUpInfo,TPopUp> ShowPopUp<TPopUp>(bool waitForClose = true, params object[] parameters)
             where TPopUp : PopUp
         {
-            var operation = Operation.CreateFromPrefab<TPopUp>(target:_canvas.gameObject, waitForClose, false, parameters: parameters);
+            var operation = Operation.CreateFromPrefab<PopUpInfo,TPopUp>(target:_canvas.gameObject, waitForClose, false, parameters: parameters);
 
-            _openedPopUps.Push(operation);
-
+            _popUps.Push(operation.Prefab);
+            
             return operation;
         }
     }

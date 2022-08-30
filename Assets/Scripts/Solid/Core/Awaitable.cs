@@ -1,16 +1,30 @@
 using System;
+using UnityEngine;
 
 /*Copyright (c) Created by Oleksii Volovich 2021*/
-namespace Solid.Behaviours
+namespace Solid.Core
 {
-    public abstract class Awaitable : SolidBehaviour
+    public abstract class Awaitable<TResult> : SolidBehaviour
     {
-        public event Action Success;
-        public event Action Error;
+        public TResult Result { get; protected set; }
+        public event Action<TResult> Success;
+        public event Action<TResult> Error;
         
         private bool _finishedWithSuccess;
 
         private bool _isCompleted;
+        
+        private async void Start() 
+        {
+            try
+            {
+                OnStart();
+            }
+            catch (Exception e)
+            {
+                Debug.LogError("Execution failed due to "+ e);
+            }
+        }
 
         public bool IsCompleted
         {
@@ -24,9 +38,9 @@ namespace Solid.Behaviours
                     return;
 
                 if (_finishedWithSuccess)
-                    Success?.Invoke();
+                    Success?.Invoke(Result);
                 else
-                    Error?.Invoke();
+                    Error?.Invoke(Result);
 
                 OnFinish(_finishedWithSuccess);
 
@@ -46,13 +60,10 @@ namespace Solid.Behaviours
             IsCompleted = true;
         }
         
+        protected abstract void OnStart();
+        
         protected virtual void OnFinish(bool finishedWithSuccess)
         {
         }
-    }
-
-    public abstract class Awaitable<TResult> : Awaitable
-    { 
-        public TResult Result { get; protected set; }
     }
 }

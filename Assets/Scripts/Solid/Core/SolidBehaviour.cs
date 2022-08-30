@@ -3,7 +3,7 @@ using UnityEngine;
 
 /*Copyright (c) Created by Oleksii Volovich 2021*/
 
-namespace Solid.Behaviours
+namespace Solid.Core
 {
     public abstract class SolidBehaviour : MonoBehaviour
     {

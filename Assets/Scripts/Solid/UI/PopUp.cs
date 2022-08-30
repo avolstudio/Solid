@@ -1,53 +1,59 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Solid.Attributes;
-using Solid.Behaviours;
+using Solid.Core;
+using Solid.Model;
 using UnityEngine;
 using UnityEngine.UI;
 
+/*Copyright (c) Created by Oleksii Volovich 2021*/
 namespace Solid.UI
 {
     [ResourcePath("override path here")]
-    public abstract class PopUp : Awaitable
+    public abstract class PopUp : Awaitable<PopUpInfo>
     {
         [SerializeField] protected Canvas _canvas;
 
-        [SerializeField] private Button _closeButton;
+        [SerializeField] protected Button _closeButton;
 
         public Button CloseButton => _closeButton;
 
-        private  void Start()
+        protected override void OnAwake(params object[] parameters)
         {
-            _closeButton?.onClick.AddListener(Close);
-        }
+            Result = null;
 
-        protected void OnDestroy()
-        {
-            SetComplete(true);
-            
-            _closeButton?.onClick.RemoveListener(Close);
-        }
-
-        private async void OnEnable()
-        {
-            try
+            if (_closeButton != null)
             {
-                 await OnShow();
-            }
-            catch (Exception e)
-            {
-                Debug.LogError("popUp showing failed with exception: " + e);
-                throw;
+                _closeButton.onClick.AddListener(() => SetCompleteAndDestroy());
             }
         }
 
-        protected async virtual Task OnShow()
+        protected void SetCompleteAndDestroy(bool isComplete = true)
         {
-        }
-
-        protected virtual async void Close()
-        {
+            SetComplete(isComplete);
+                
             Destroy(gameObject);
         }
+    }
+
+    public class PopUpInfo:IModel<PopUpInfo>
+    {
+        private string _info;
+        
+        public string Info
+        {
+            get
+            {
+                return _info;
+            }
+            set
+            {
+                _info = value;
+                
+                ModelChanged?.Invoke(this);
+            }
+        }
+        
+        public bool isDirty { get; }
+        public event Action<PopUpInfo> ModelChanged;
     }
 }
