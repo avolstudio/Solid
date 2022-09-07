@@ -13,11 +13,11 @@ namespace Solid.UI
             set
             {
                 Unsubscribe();
-
+                
+                if (value == null) return;
+                
                 _model = value;
-
-                if (_model == null) return;
-
+                
                 Subscribe();
             }
         }

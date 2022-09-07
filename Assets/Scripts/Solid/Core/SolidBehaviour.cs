@@ -19,7 +19,7 @@ namespace Solid.Core
             }
             catch (Exception e)
             {
-                Debug.Log("Initialization failed due to " + e);
+                Debug.LogError("Initialization failed due to " + e);
             }
         }
 
