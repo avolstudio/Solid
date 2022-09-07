@@ -9,12 +9,12 @@ namespace Solid.UI
     {
         private readonly Canvas _canvas;
 
-        private Stack<PopUp> _popUps;
+        private List<PopUp> _popUps;
 
         public UIManager(Canvas canvas)
         {
             _canvas = canvas;
-            _popUps = new Stack<PopUp>();
+            _popUps = new List<PopUp>();
         }
 
         public InstantiateOperation<PopUpInfo,TPopUp> ShowPopUp<TPopUp>(bool waitForClose = true, params object[] parameters)
@@ -22,9 +22,36 @@ namespace Solid.UI
         {
             var operation = Operation.CreateFromPrefab<PopUpInfo,TPopUp>(target:_canvas.gameObject, waitForClose, false, parameters: parameters);
 
-            _popUps.Push(operation.Prefab);
+            _popUps.Add(operation.Prefab);
             
             return operation;
+        }
+
+        public void ClosePopUp<TPopUp>()
+        {
+            var target =  _popUps.Find(popup => popup is TPopUp);
+
+            if (target!= null)
+            {
+                target.CloseAndDestroy();
+            }
+        } 
+        public void ClosePopUp<TPopUp>(TPopUp popUp)
+        {
+            var target =  _popUps.Find(popup => Equals(popup, popUp));
+
+            if (target != null)
+            {
+                target.CloseAndDestroy();
+            }
+        }
+
+        public void CloseAllPopUps()
+        {
+            for (int i = 0; i < _popUps.Count; i++)
+            {
+                _popUps[i].CloseAndDestroy();
+            }
         }
     }
 }

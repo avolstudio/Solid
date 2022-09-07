@@ -23,11 +23,11 @@ namespace Solid.UI
 
             if (_closeButton != null)
             {
-                _closeButton.onClick.AddListener(() => SetCompleteAndDestroy());
+                _closeButton.onClick.AddListener(() => CloseAndDestroy());
             }
         }
 
-        protected void SetCompleteAndDestroy(bool isComplete = true)
+        public void CloseAndDestroy(bool isComplete = true)
         {
             SetComplete(isComplete);
                 

@@ -24,7 +24,7 @@ namespace Solid.Examples.PopUps
         {
             await Operation.Timer(showTime,target:gameObject,destroyContainerAfterExecution:false);
             
-            SetCompleteAndDestroy();
+            CloseAndDestroy();
         }
     }
 }
