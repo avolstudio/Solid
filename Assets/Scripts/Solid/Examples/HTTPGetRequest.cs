@@ -29,7 +29,6 @@ namespace Solid.Examples
                 Debug.LogError(e);
                 
                 SetComplete(false);
-
             }
             
             return response;

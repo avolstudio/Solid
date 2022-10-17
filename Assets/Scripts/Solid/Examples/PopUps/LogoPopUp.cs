@@ -1,9 +1,7 @@
-using System.Threading.Tasks;
 using Solid.Attributes;
 using Solid.Core;
 using Solid.UI;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Solid.Examples.PopUps
 {
