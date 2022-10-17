@@ -19,11 +19,6 @@ namespace Solid.Examples
             
             ServerAdress = (string) parameters[0];
         }
-
-        protected virtual void Update()
-        {
-            Client.Timeout = TimeSpan.FromSeconds(5);
-        }
     }
 }    
 

@@ -5,8 +5,8 @@ using UnityEngine;
 
 namespace Solid.Examples.PopUps
 {
-    [ResourcePath("PopUps/LogoPopUp")]
-    public class LogoPopUp : PopUp
+    [ResourcePath("PopUps/ExamplePopUp")]
+    public class ExamplePopUp : PopUp
     {
         [SerializeField] private float showTime = 5f;
         protected override void OnAwake(params object[] parameters)

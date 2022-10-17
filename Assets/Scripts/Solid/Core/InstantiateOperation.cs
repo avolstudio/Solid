@@ -37,7 +37,7 @@ namespace Solid.Core
 
             var prefab = Resources.Load<TPrefab>(path);
 
-            awaitable = SolidBehaviour.Instantiate(prefab, parameters);
+            awaitable = SolidBehaviour.Instantiate(prefab, container.transform, parameters);
 
             status = OperationStatus.Running;
         }
