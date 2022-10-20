@@ -1,7 +1,6 @@
 # Solid
 Lightweight framework which provide awaitable and parameterized MonoBehaviour, and Model-View pair
-
-Look at the script named Test. Create new scene, add Test to any GameObject and run. Test have next lines in Start method:
+Load Demo scene and run
 
     
     Debug.Log("Run and wait for timer");
