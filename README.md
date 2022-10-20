@@ -1,5 +1,5 @@
 # Solid
-Lightweight framework which provide awaitable and parameterized MonoBehaviour, and Model-View pair
+Lightweight framework which provide awaitable and parameterized MonoBehaviour, and Model-View pair.
 Load Demo scene and run
 
     
