@@ -29,8 +29,7 @@ public class Test : MonoBehaviour
         Debug.Log("Play audio file and wait for finish");
         await Operation.Run<PlayAudio,bool>(parameters:_clip);
         
-        Debug.Log("Finish audio clip");
-
+        Debug.Log("Make get request and wait for result");
         var responseMessage = await Operation.Run<HTTPGetRequest,HttpResponseMessage>(parameters:"https://en.wikipedia.org/wiki/Main_Page");
         
         Debug.Log("result " + responseMessage);
